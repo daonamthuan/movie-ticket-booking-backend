@@ -10,7 +10,6 @@ export const errorHandlingMiddleware = (err, req, res, next) => {
         stack: err.stack,
     };
 
-    // use cross-env BUILD_MODE=dev
     if (env.BUILD_MODE !== "development") delete responseError.stack;
 
     // Đoạn này có thể mở rộng nhiều về sau như ghi Error Log vào file, bắn thông báo lỗi vào group Slack, Telegram, Email...vv

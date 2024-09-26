@@ -6,17 +6,17 @@ module.exports = {
         return queryInterface.bulkInsert("Allcodes", [
             // gender
             {
-                keyCode: "M",
+                keyCode: "MALE",
                 type: "GENDER",
                 value: "Nam",
             },
             {
-                keyCode: "F",
+                keyCode: "FEMALE",
                 type: "GENDER",
                 value: "Nữ",
             },
             {
-                keyCode: "O",
+                keyCode: "OTHER",
                 type: "GENDER",
                 value: "Khác",
             },
@@ -38,7 +38,12 @@ module.exports = {
             },
             // membership
             {
-                keyCode: "SLIVER",
+                keyCode: "BRONZE",
+                type: "MEMBERSHIP",
+                value: "Đồng",
+            },
+            {
+                keyCode: "SILVER",
                 type: "MEMBERSHIP",
                 value: "Bạc",
             },
@@ -48,14 +53,9 @@ module.exports = {
                 value: "Vàng",
             },
             {
-                keyCode: "PLATINUM",
-                type: "MEMBERSHIP",
-                value: "Bạch kim",
-            },
-            {
                 keyCode: "DIAMOND",
                 type: "MEMBERSHIP",
-                value: "Kim cương",
+                value: "Kim Cương",
             },
 
             // room status

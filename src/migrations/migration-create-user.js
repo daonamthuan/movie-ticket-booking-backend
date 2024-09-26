@@ -36,6 +36,9 @@ module.exports = {
             birthday: {
                 type: Sequelize.BIGINT,
             },
+            image: {
+                type: Sequelize.STRING,
+            },
 
             createdAt: {
                 allowNull: false,

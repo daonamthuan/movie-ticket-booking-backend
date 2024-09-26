@@ -5,24 +5,6 @@ import { JwtProvider } from "~/providers/JwtProvider";
 import { userService } from "~/services/userService";
 import { env } from "~/config/environment";
 
-/// Mock nhanh thông tin user thay vì phải tạo Database rồi query.
-const MOCK_DATABASE = {
-    USER: {
-        ID: "trungquandev-sample-id-12345678",
-        EMAIL: "trungquandev.official@gmail.com",
-        PASSWORD: "trungquandev@123",
-    },
-};
-
-const createNewUser = async (req, res, next) => {
-    try {
-        let response = await userService.createNewUser(req.body);
-        res.status(StatusCodes.CREATED).json(response);
-    } catch (err) {
-        next(err);
-    }
-};
-
 const login = async (req, res, next) => {
     try {
         let userInfo = await userService.handleUserLogin(req.body);
@@ -30,7 +12,7 @@ const login = async (req, res, next) => {
         const accessToken = await JwtProvider.generateToken(
             userInfo,
             env.ACCESS_TOKEN_SECRET_KEY,
-            5
+            "1h"
         );
 
         const refreshToken = await JwtProvider.generateToken(
@@ -66,14 +48,13 @@ const logout = async (req, res, next) => {
     try {
         res.clearCookie("accessToken");
         res.clearCookie("refreshToken");
-
         res.status(StatusCodes.OK).json({ message: "Logout API success!" });
-    } catch (error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
+    } catch (err) {
+        next(err);
     }
 };
 
-const refreshToken = async (req, res) => {
+const refreshToken = async (req, res, next) => {
     try {
         const refreshTokenFromCookie = req.cookies?.refreshToken;
         const refreshTokenDecoded = await JwtProvider.verifyToken(
@@ -89,7 +70,7 @@ const refreshToken = async (req, res) => {
         const accessToken = await JwtProvider.generateToken(
             userInfo,
             env.ACCESS_TOKEN_SECRET_KEY,
-            5
+            "1h"
         );
 
         res.cookie("accessToken", accessToken, {
@@ -100,14 +81,101 @@ const refreshToken = async (req, res) => {
         });
 
         res.status(StatusCodes.OK).json({ message: "Refresh token successfully!" });
-    } catch (error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Refresh token failed!" });
+    } catch (err) {
+        next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "Refresh token failed!"));
+    }
+};
+
+const getAllUsers = async (req, res, next) => {
+    try {
+        let users = await userService.getAllUsers();
+        res.status(StatusCodes.OK).json(users);
+    } catch (err) {
+        next(err);
+    }
+};
+const getAllGenders = async (req, res, next) => {
+    try {
+        let genders = await userService.getAllGenders();
+        res.status(StatusCodes.OK).json(genders);
+    } catch (err) {
+        next(err);
+    }
+};
+
+const getAllRoles = async (req, res, next) => {
+    try {
+        let roles = await userService.getAllRoles();
+        res.status(StatusCodes.OK).json(roles);
+    } catch (err) {
+        next(err);
+    }
+};
+
+const getAllMemberships = async (req, res, next) => {
+    try {
+        let memberships = await userService.getAllMemberships();
+        res.status(StatusCodes.OK).json(memberships);
+    } catch (err) {
+        next(err);
+    }
+};
+
+const createNewUser = async (req, res, next) => {
+    try {
+        console.log("Req.body : ", req.body);
+        if (req.file) {
+            req.body.image = req.file.path;
+            const uploadedImage = {
+                url: req.file.path,
+                publicId: req.file.filename,
+            };
+            console.log("Check upload cloudinary image: ", uploadedImage);
+        }
+
+        let response = await userService.createNewUser(req.body);
+        res.status(StatusCodes.CREATED).json(response);
+    } catch (err) {
+        next(err);
+    }
+};
+
+const updateUser = async (req, res, next) => {
+    try {
+        if (req.file) {
+            req.body.image = req.file.path;
+            const uploadedImage = {
+                url: req.file.path,
+                publicId: req.file.filename,
+            };
+            console.log("Check upload cloudinary image in UPDATE USER: ", uploadedImage);
+        }
+        let response = await userService.updateUser(req.body);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        next(err);
+    }
+};
+
+const deleteUser = async (req, res, next) => {
+    try {
+        console.log("Check req params: ", req.params);
+        let response = await userService.deleteUser(req.params.id);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        next(err);
     }
 };
 
 export const userController = {
-    createNewUser,
     login,
     logout,
     refreshToken,
+    getAllUsers,
+    getAllGenders,
+    getAllRoles,
+    getAllMemberships,
+    createNewUser,
+    updateUser,
+    deleteUser,
 };
