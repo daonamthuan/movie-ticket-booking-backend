@@ -121,6 +121,15 @@ const getAllMemberships = async (req, res, next) => {
     }
 };
 
+const getAgeLimits = async (req, res, next) => {
+    try {
+        let ageLimits = await userService.getAgeLimits();
+        res.status(StatusCodes.OK).json(ageLimits);
+    } catch (err) {
+        next(err);
+    }
+};
+
 const createNewUser = async (req, res, next) => {
     try {
         console.log("Req.body : ", req.body);
@@ -159,8 +168,7 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
     try {
-        console.log("Check req params: ", req.params);
-        let response = await userService.deleteUser(req.params.id);
+        let response = await userService.deleteUser(req.query.userId);
         res.status(StatusCodes.OK).json(response);
     } catch (err) {
         next(err);
@@ -178,4 +186,5 @@ export const userController = {
     createNewUser,
     updateUser,
     deleteUser,
+    getAgeLimits,
 };

@@ -2,6 +2,7 @@ import express from "express";
 import { userValidation } from "~/validations/userValidation";
 import { userController } from "~/controllers/userController";
 import { upload } from "~/middlewares/uploadMiddleware";
+import { deleteImageMiddleware } from "~/middlewares/uploadMiddleware";
 
 const Router = express.Router();
 
@@ -14,15 +15,16 @@ Router.route("/create-new-user").post(
     userValidation.createNewUser,
     userController.createNewUser
 );
-Router.route("/update-user").post(
+Router.route("/update-user").put(
     upload.single("image"),
     userValidation.updateUser,
     userController.updateUser
 );
-Router.route("/delete-user/:id").delete(userController.deleteUser);
+Router.route("/delete-user").delete(deleteImageMiddleware, userController.deleteUser);
 
 Router.route("/get-all-genders").get(userController.getAllGenders);
 Router.route("/get-all-roles").get(userController.getAllRoles);
 Router.route("/get-all-memberships").get(userController.getAllMemberships);
+Router.route("/get-age-limits").get(userController.getAgeLimits);
 
 export const userRoute = Router;

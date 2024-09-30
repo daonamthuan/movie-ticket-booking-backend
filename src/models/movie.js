@@ -23,8 +23,9 @@ module.exports = (sequelize, DataTypes) => {
             movieFormat: DataTypes.STRING,
             audioType: DataTypes.STRING,
             description: DataTypes.STRING,
-            thumbnail: DataTypes.STRING,
+            image: DataTypes.STRING,
             trailer: DataTypes.STRING,
+            status: DataTypes.STRING,
         },
         {
             sequelize,

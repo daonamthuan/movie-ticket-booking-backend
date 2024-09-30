@@ -39,10 +39,13 @@ module.exports = {
             description: {
                 type: Sequelize.STRING,
             },
-            thumbnail: {
+            image: {
                 type: Sequelize.STRING,
             },
             trailer: {
+                type: Sequelize.STRING,
+            },
+            status: {
                 type: Sequelize.STRING,
             },
 

@@ -100,6 +100,20 @@ let getAllMemberships = async () => {
     }
 };
 
+let getAgeLimits = async () => {
+    try {
+        let ageLimits = await db.Allcode.findAll({
+            where: { type: "AGE_LIMIT" },
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+            raw: true,
+        });
+
+        return ageLimits;
+    } catch (err) {
+        throw err;
+    }
+};
+
 let createNewUser = async (userInfo) => {
     try {
         let isEmailExist = await checkUserEmailIsExist(userInfo.email);
@@ -162,7 +176,6 @@ let deleteUser = async (userId) => {
         let user = await db.User.findOne({
             where: { id: userId },
         });
-        console.log("Delete user: ", user);
 
         if (!user) {
             throw new ApiError(StatusCodes.BAD_REQUEST, "Delete failed because email isn't exist");
@@ -187,4 +200,5 @@ export const userService = {
     createNewUser,
     updateUser,
     deleteUser,
+    getAgeLimits,
 };
