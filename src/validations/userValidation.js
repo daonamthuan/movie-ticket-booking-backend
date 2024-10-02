@@ -5,8 +5,8 @@ import ApiError from "~/utils/ApiError";
 const vietnamesePattern = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠ-ỹ\s]+$/;
 
 const createNewUser = async (req, res, next) => {
-    console.log("Check req.body: ", req.body);
-    console.log("Check req.files: ", req.file);
+    console.log("Validation req.body: ", req.body);
+    console.log("Validation req.files: ", req.file);
     const userSchema = Joi.object({
         email: Joi.string()
             .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
@@ -29,7 +29,7 @@ const createNewUser = async (req, res, next) => {
             .min(new Date("1900-01-01").getTime())
             .max(Date.now())
             .optional(),
-        image: Joi.optional(),
+        image: Joi.string().optional(),
     });
 
     try {
@@ -45,6 +45,8 @@ const createNewUser = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
+    console.log("Validation req.body: ", req.body);
+    console.log("Validation req.files: ", req.file);
     const userSchema = Joi.object({
         email: Joi.string()
             .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })

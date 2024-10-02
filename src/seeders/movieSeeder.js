@@ -117,7 +117,7 @@ module.exports = {
                 status: "coming-soon",
             },
             {
-                movieName: "NGÀY XƯA CÓ MỘT CHUYỆN TÌNH",
+                movieName: "ELLI VÀ BÍ ẨN CHIẾC TÀU MA",
                 category: "Gia đình, Hoạt hình",
                 duration: 87,
                 directors: "Piet De Rycker, Jesper Møller, Jens Møller",
@@ -128,7 +128,7 @@ module.exports = {
                 audioType: "both",
                 description:
                     'Khi một hồn ma nhỏ vô gia cư gõ cửa nhà những cư dân lập dị của một Chuyến tàu ma để tìm kiếm một nơi để thuộc về, cô vô tình thu hút sự chú ý từ "thế giới bên ngoài" và phải hợp tác với phi hành đoàn quái vật hỗn tạp trong một nhiệm vụ điên rồ để cứu không chỉ tương lai của Chuyến tàu ma mà còn là cơ hội duy nhất để cuối cùng có một gia đình của riêng mình.',
-                image: "https://res.cloudinary.com/dquwkvuyh/image/upload/v1727709469/yomrhw9pch6zhy4kj1ak.png",
+                image: "https://res.cloudinary.com/dquwkvuyh/image/upload/v1727710479/da4bknyyira6imsnw7o5.png",
                 trailer: "https://youtu.be/mBvrpYQVMso?si=QRIPeHmdMdrbi-b3",
                 status: "coming-soon",
             },

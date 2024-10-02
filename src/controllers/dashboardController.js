@@ -10,6 +10,7 @@ const access = async (req, res, next) => {
 
         res.status(StatusCodes.OK).json(userInfo);
     } catch (err) {
+        console.log(err);
         next(err);
     }
 };
@@ -19,6 +20,7 @@ const getRevenueLast30Days = async (req, res, next) => {
         let data = await dashboardService.getRevenueLast30Days();
         // res.
     } catch (err) {
+        console.log(err);
         next(err);
     }
 };
@@ -40,17 +42,18 @@ const createNewMovie = async (req, res, next) => {
         let response = await dashboardService.createNewMovie(movieData);
         res.status(StatusCodes.CREATED).json(response);
     } catch (err) {
+        console.log(err);
         next(err);
     }
 };
 
 const updateMovie = async (req, res, next) => {
     try {
-        console.log("In controller");
         let movieData = req.body;
         let response = await dashboardService.updateMovie(movieData);
         res.status(StatusCodes.OK).json(response);
     } catch (err) {
+        console.log(err);
         next(err);
     }
 };
@@ -65,6 +68,50 @@ const deleteMovie = async (req, res, next) => {
     }
 };
 
+// Food
+const getAllFoods = async (req, res, next) => {
+    try {
+        let foods = await dashboardService.getAllFoods();
+        res.status(StatusCodes.OK).json(foods);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const createNewFood = async (req, res, next) => {
+    try {
+        console.log("Check req.body create food: ", req.body);
+        let foodData = req.body;
+        let response = await dashboardService.createNewFood(foodData);
+        res.status(StatusCodes.CREATED).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const updateFood = async (req, res, next) => {
+    try {
+        let foodData = req.body;
+        let response = await dashboardService.updateFood(foodData);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const deleteFood = async (req, res, next) => {
+    try {
+        let response = await dashboardService.deleteFood(req.query.foodId);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
 export const dashboardController = {
     access,
     getRevenueLast30Days,
@@ -72,4 +119,8 @@ export const dashboardController = {
     createNewMovie,
     updateMovie,
     deleteMovie,
+    getAllFoods,
+    createNewFood,
+    updateFood,
+    deleteFood,
 };

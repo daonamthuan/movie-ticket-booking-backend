@@ -1,15 +1,16 @@
 import db from "~/models";
 import ApiError from "~/utils/ApiError";
 import { StatusCodes } from "http-status-codes";
-import { where } from "sequelize";
 
 let getRevenueLast30Days = async (userId) => {
     try {
     } catch (err) {
+        console.log(err);
         throw err;
     }
 };
 
+// Movie
 let getAllMoviesByStatus = async (status) => {
     try {
         let movies = [];
@@ -26,6 +27,7 @@ let getAllMoviesByStatus = async (status) => {
 
         return movies;
     } catch (err) {
+        console.log(err);
         throw err;
     }
 };
@@ -35,13 +37,13 @@ let createNewMovie = async (movieData) => {
         let movie = await db.Movie.create(movieData);
         return { message: "Create movie successfully!" };
     } catch (err) {
+        console.log(err);
         throw err;
     }
 };
 
 let updateMovie = async (movieData) => {
     try {
-        console.log("In services");
         let movie = await db.Movie.findOne({
             where: { id: movieData.id },
         });
@@ -54,9 +56,9 @@ let updateMovie = async (movieData) => {
             where: { id: movieData.id },
         });
 
-        return { message: "Create movie successfully!" };
+        return { message: "Update movie successfully!" };
     } catch (err) {
-        console.log("Error in services: ", err);
+        console.log(err);
         throw err;
     }
 };
@@ -77,13 +79,80 @@ let deleteMovie = async (movieId) => {
         });
         return { message: "Delete movie successfully!" };
     } catch (err) {
+        console.log(err);
         throw err;
     }
 };
+
+// Food
+let getAllFoods = async () => {
+    try {
+        let foods = await db.Food_Menu.findAll({
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+        });
+        return foods;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let createNewFood = async (foodData) => {
+    try {
+        let food = await db.Food_Menu.create(foodData);
+        return { message: "Create food successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let updateFood = async (foodData) => {
+    try {
+        let food = await db.Food_Menu.findOne({
+            where: { id: foodData.id },
+        });
+
+        if (!food) {
+            throw new ApiError(StatusCodes.BAD_GATEWAY, "Food need to delete not found");
+        }
+
+        await db.Food_Menu.update(foodData, {
+            where: { id: foodData.id },
+        });
+
+        return { message: "Update food successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let deleteFood = async (foodId) => {
+    try {
+        let food = await db.Food_Menu.findOne({
+            where: { id: foodId },
+        });
+
+        if (!food)
+            throw new ApiError(StatusCodes.BAD_REQUEST, "Delete failed because food is not exist!");
+        await db.Food_Menu.destroy({
+            where: { id: foodId },
+        });
+        return { message: "Delete food successfully!" };
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const dashboardService = {
     getRevenueLast30Days,
     getAllMoviesByStatus,
     createNewMovie,
     updateMovie,
     deleteMovie,
+    getAllFoods,
+    createNewFood,
+    updateFood,
+    deleteFood,
 };

@@ -1,8 +1,11 @@
 import express from "express";
 import { userValidation } from "~/validations/userValidation";
 import { userController } from "~/controllers/userController";
-import { upload } from "~/middlewares/uploadMiddleware";
-import { deleteImageMiddleware } from "~/middlewares/uploadMiddleware";
+import {
+    uploadImageMiddleware,
+    updateImageMiddleware,
+    deleteImageMiddleware,
+} from "~/middlewares/imageMiddleware";
 
 const Router = express.Router();
 
@@ -11,12 +14,12 @@ Router.route("/logout").delete(userController.logout);
 Router.route("/refresh-token").put(userController.refreshToken);
 Router.route("/get-all-users").get(userController.getAllUsers);
 Router.route("/create-new-user").post(
-    upload.single("image"),
+    uploadImageMiddleware,
     userValidation.createNewUser,
     userController.createNewUser
 );
 Router.route("/update-user").put(
-    upload.single("image"),
+    updateImageMiddleware,
     userValidation.updateUser,
     userController.updateUser
 );
