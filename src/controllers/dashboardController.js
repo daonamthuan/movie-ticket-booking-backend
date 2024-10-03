@@ -112,6 +112,49 @@ const deleteFood = async (req, res, next) => {
     }
 };
 
+// Cinema
+const getAllCinemas = async (req, res, next) => {
+    try {
+        let cinemas = await dashboardService.getAllCinemas();
+        res.status(StatusCodes.OK).json(cinemas);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const createNewCinema = async (req, res, next) => {
+    try {
+        let cinemaData = req.body;
+        let response = await dashboardService.createNewCinema(cinemaData);
+        res.status(StatusCodes.CREATED).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const updateCinema = async (req, res, next) => {
+    try {
+        let cinemaData = req.body;
+        let response = await dashboardService.updateCinema(cinemaData);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const deleteCinema = async (req, res, next) => {
+    try {
+        let response = await dashboardService.deleteCinema(req.query.cinemaId);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
 export const dashboardController = {
     access,
     getRevenueLast30Days,
@@ -123,4 +166,8 @@ export const dashboardController = {
     createNewFood,
     updateFood,
     deleteFood,
+    getAllCinemas,
+    createNewCinema,
+    updateCinema,
+    deleteCinema,
 };

@@ -145,6 +145,70 @@ let deleteFood = async (foodId) => {
     }
 };
 
+// Cinema
+let getAllCinemas = async () => {
+    try {
+        let cinemas = await db.Cinema.findAll({
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+        });
+        return cinemas;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let createNewCinema = async (cinemaData) => {
+    try {
+        let cinema = await db.Cinema.create(cinemaData);
+        return { message: "Create cinema successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let updateCinema = async (cinemaData) => {
+    try {
+        let cinema = await db.Cinema.findOne({
+            where: { id: cinemaData.id },
+        });
+
+        if (!cinema) {
+            throw new ApiError(StatusCodes.BAD_GATEWAY, "cinema need to delete not found");
+        }
+
+        await db.Cinema.update(cinemaData, {
+            where: { id: cinemaData.id },
+        });
+
+        return { message: "Update cinema successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let deleteCinema = async (cinemaId) => {
+    try {
+        let cinema = await db.Cinema.findOne({
+            where: { id: cinemaId },
+        });
+
+        if (!cinema)
+            throw new ApiError(
+                StatusCodes.BAD_REQUEST,
+                "Delete failed because cinema is not exist!"
+            );
+        await db.Cinema.destroy({
+            where: { id: cinemaId },
+        });
+        return { message: "Delete cinema successfully!" };
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const dashboardService = {
     getRevenueLast30Days,
     getAllMoviesByStatus,
@@ -155,4 +219,8 @@ export const dashboardService = {
     createNewFood,
     updateFood,
     deleteFood,
+    getAllCinemas,
+    createNewCinema,
+    updateCinema,
+    deleteCinema,
 };
