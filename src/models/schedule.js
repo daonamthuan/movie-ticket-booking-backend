@@ -9,6 +9,11 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Schedule.belongsTo(models.Room, {
+                foreignKey: "roomId",
+                targetKey: "id",
+                as: "roomSchedule",
+            });
         }
     }
     Schedule.init(
@@ -17,10 +22,13 @@ module.exports = (sequelize, DataTypes) => {
             movieId: DataTypes.INTEGER,
             startTime: DataTypes.BIGINT,
             endTime: DataTypes.BIGINT,
+            deletedAt: DataTypes.DATE,
         },
         {
             sequelize,
             modelName: "Schedule",
+            paranoid: true,
+            timestamps: true,
         }
     );
     return Schedule;

@@ -23,10 +23,13 @@ module.exports = (sequelize, DataTypes) => {
             membership: DataTypes.STRING,
             birthday: DataTypes.BIGINT,
             image: DataTypes.STRING,
+            deletedAt: DataTypes.DATE,
         },
         {
             sequelize,
             modelName: "User",
+            paranoid: true,
+            timestamps: true,
         }
     );
     return User;

@@ -18,10 +18,13 @@ module.exports = (sequelize, DataTypes) => {
             status: DataTypes.STRING,
             validFrom: DataTypes.BIGINT,
             validUntil: DataTypes.BIGINT,
+            deletedAt: DataTypes.DATE,
         },
         {
             sequelize,
             modelName: "Voucher",
+            paranoid: true,
+            timestamps: true,
         }
     );
     return Voucher;

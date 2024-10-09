@@ -155,6 +155,49 @@ const deleteCinema = async (req, res, next) => {
     }
 };
 
+// Rooms
+const getCinemaById = async (req, res, next) => {
+    try {
+        let cinema = await dashboardService.getCinemaById(req.params.cinemaId);
+        res.status(StatusCodes.OK).json(cinema);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const createNewRoom = async (req, res, next) => {
+    try {
+        let roomData = req.body;
+        let response = await dashboardService.createNewRoom(roomData);
+        res.status(StatusCodes.CREATED).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const updateRoom = async (req, res, next) => {
+    try {
+        let roomData = req.body;
+        let response = await dashboardService.updateRoom(roomData);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const deleteRoom = async (req, res, next) => {
+    try {
+        let response = await dashboardService.deleteRoom(req.params.roomId);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
 export const dashboardController = {
     access,
     getRevenueLast30Days,
@@ -170,4 +213,8 @@ export const dashboardController = {
     createNewCinema,
     updateCinema,
     deleteCinema,
+    getCinemaById,
+    createNewRoom,
+    updateRoom,
+    deleteRoom,
 };

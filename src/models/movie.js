@@ -26,10 +26,13 @@ module.exports = (sequelize, DataTypes) => {
             image: DataTypes.STRING,
             trailer: DataTypes.STRING,
             status: DataTypes.STRING,
+            deletedAt: DataTypes.DATE,
         },
         {
             sequelize,
             modelName: "Movie",
+            paranoid: true,
+            timestamps: true,
         }
     );
     return Movie;

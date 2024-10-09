@@ -32,14 +32,14 @@ module.exports = {
             {
                 roomId: 2,
                 movieId: 2,
-                startTime: new Date().setHours(17, 30, 0, 0),
-                endTime: new Date().setHours(19, 6, 0, 0),
+                startTime: new Date().setHours(19, 40, 0, 0),
+                endTime: new Date().setHours(21, 15, 0, 0),
             },
             {
                 roomId: 4,
                 movieId: 3,
-                startTime: new Date().setHours(19, 15, 0, 0),
-                endTime: new Date().setHours(20, 51, 0, 0),
+                startTime: new Date().setHours(19, 35, 0, 0),
+                endTime: new Date().setHours(21, 0, 0, 0),
             },
         ]);
     },

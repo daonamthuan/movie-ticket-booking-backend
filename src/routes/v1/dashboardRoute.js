@@ -4,6 +4,7 @@ import { authMiddleware } from "~/middlewares/authMiddleware";
 import { movieValidation } from "~/validations/movieValidation";
 import { foodValidation } from "~/validations/foodValidation";
 import { cinemaValidation } from "~/validations/cinemaValidation";
+import { roomValidation } from "~/validations/roomValidation";
 import {
     uploadImageMiddleware,
     updateImageMiddleware,
@@ -56,5 +57,11 @@ Router.route("/update-cinema").put(
     dashboardController.updateCinema
 );
 Router.route("/delete-cinema").delete(deleteImageMiddleware, dashboardController.deleteCinema);
+
+// Rooms
+Router.route("/get-cinema-by-id/:cinemaId").get(dashboardController.getCinemaById);
+Router.route("/create-new-room").post(roomValidation.createRoom, dashboardController.createNewRoom);
+Router.route("/update-room").put(roomValidation.updateRoom, dashboardController.updateRoom);
+Router.route("/delete-room/:roomId").delete(dashboardController.deleteRoom);
 
 export const dashboardRoute = Router;

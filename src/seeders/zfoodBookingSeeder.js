@@ -1,7 +1,5 @@
 "use strict";
 
-const seatMap = Array.from({ length: 10 }, () => Array.from({ length: 12 }, () => 1));
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {

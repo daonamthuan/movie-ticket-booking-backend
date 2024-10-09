@@ -28,10 +28,13 @@ module.exports = (sequelize, DataTypes) => {
             price: DataTypes.INTEGER,
             description: DataTypes.STRING,
             image: DataTypes.STRING,
+            deletedAt: DataTypes.DATE,
         },
         {
             sequelize,
             modelName: "Food_Menu",
+            paranoid: true,
+            timestamps: true,
         }
     );
     return Food_Menu;

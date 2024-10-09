@@ -99,15 +99,11 @@ export const updateImageMiddleware = (req, res, next) => {
 export const deleteImageMiddleware = async (req, res, next) => {
     try {
         let publicId = req.query.publicId;
+        console.log("Check public id: ", publicId);
         if (publicId) {
-            const result = await cloudinary.uploader.destroy(publicId);
-            if (result.result === "ok") {
-                console.log("Delete image in cloudinary successfully");
-                next();
-            }
-        } else {
-            throw new ApiError(StatusCodes.BAD_REQUEST, "Can't delete because publicId not found");
+            await cloudinary.uploader.destroy(publicId);
         }
+        next();
     } catch (err) {
         console.log(err);
         next(err);

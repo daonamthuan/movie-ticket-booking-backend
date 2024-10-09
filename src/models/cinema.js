@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Cinema.hasMany(models.Room, {
+                foreignKey: "cinemaId",
+                as: "cinemaRooms",
+            });
         }
     }
     Cinema.init(
@@ -18,10 +22,13 @@ module.exports = (sequelize, DataTypes) => {
             address: DataTypes.STRING,
             hotline: DataTypes.STRING,
             image: DataTypes.STRING,
+            deletedAt: DataTypes.DATE,
         },
         {
             sequelize,
             modelName: "Cinema",
+            paranoid: true,
+            timestamps: true,
         }
     );
     return Cinema;

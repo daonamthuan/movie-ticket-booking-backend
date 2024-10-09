@@ -1,6 +1,7 @@
 import db from "~/models";
 import ApiError from "~/utils/ApiError";
 import { StatusCodes } from "http-status-codes";
+import { Op } from "sequelize";
 
 let getRevenueLast30Days = async (userId) => {
     try {
@@ -209,6 +210,96 @@ let deleteCinema = async (cinemaId) => {
     }
 };
 
+// Room
+let getCinemaById = async (cinemaId) => {
+    try {
+        // const currentTime = Date.now();
+        const currentTime = new Date().setHours(19, 30, 0, 0);
+
+        // Get cinema and all rooms of cinema
+        let cinemaInfo = await db.Cinema.findOne({
+            where: { id: cinemaId },
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+            include: [
+                {
+                    model: db.Room,
+                    as: "cinemaRooms",
+                    attributes: { exclude: ["createdAt", "updatedAt"] },
+                    include: [
+                        {
+                            model: db.Schedule,
+                            as: "roomSchedule",
+                            attributes: { exclude: ["createdAt", "updatedAt"] },
+                            where: {
+                                startTime: {
+                                    [Op.lte]: currentTime,
+                                },
+                                endTime: {
+                                    [Op.gte]: currentTime,
+                                },
+                            },
+                            required: false,
+                        },
+                    ],
+                },
+            ],
+        });
+
+        return cinemaInfo;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let createNewRoom = async (roomData) => {
+    try {
+        let room = await db.Room.create(roomData);
+        return { message: "Create room successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let updateRoom = async (roomData) => {
+    try {
+        let room = await db.Room.findOne({
+            where: { id: roomData.id },
+        });
+
+        if (!room) {
+            throw new ApiError(StatusCodes.BAD_GATEWAY, "room need to delete not found");
+        }
+
+        await db.Room.update(roomData, {
+            where: { id: roomData.id },
+        });
+
+        return { message: "Update room successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let deleteRoom = async (roomId) => {
+    try {
+        let room = await db.Room.findOne({
+            where: { id: roomId },
+        });
+
+        if (!room)
+            throw new ApiError(StatusCodes.BAD_REQUEST, "Delete failed because room is not exist!");
+        await db.Room.destroy({
+            where: { id: roomId },
+        });
+        return { message: "Delete room successfully!" };
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const dashboardService = {
     getRevenueLast30Days,
     getAllMoviesByStatus,
@@ -223,4 +314,8 @@ export const dashboardService = {
     createNewCinema,
     updateCinema,
     deleteCinema,
+    getCinemaById,
+    createNewRoom,
+    updateRoom,
+    deleteRoom,
 };

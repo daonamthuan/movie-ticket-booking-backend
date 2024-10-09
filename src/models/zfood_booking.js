@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             sequelize,
             modelName: "Food_Booking",
+            timestamps: true,
         }
     );
     return Food_Booking;

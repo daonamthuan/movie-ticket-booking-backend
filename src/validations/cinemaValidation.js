@@ -4,13 +4,12 @@ import ApiError from "~/utils/ApiError";
 
 const createCinema = async (req, res, next) => {
     console.log("Validation req.body: ", req.body);
-    console.log("Validation req.files: ", req.file);
     const cinemaSchema = Joi.object({
         cinemaName: Joi.string().required(),
-        totalRooms: Joi.number().integer().required(),
+        totalRooms: Joi.number().integer().min(1).required(),
         address: Joi.string().required(),
         hotline: Joi.string().required(),
-        image: Joi.string().required(),
+        image: Joi.any().required(),
     });
 
     try {
