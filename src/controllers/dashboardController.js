@@ -25,6 +25,7 @@ const getRevenueLast30Days = async (req, res, next) => {
     }
 };
 
+// Movie
 const getAllMoviesByStatus = async (req, res, next) => {
     try {
         let status = req.query.status;
@@ -156,10 +157,20 @@ const deleteCinema = async (req, res, next) => {
 };
 
 // Rooms
-const getCinemaById = async (req, res, next) => {
+const getCinemaInfoById = async (req, res, next) => {
     try {
-        let cinema = await dashboardService.getCinemaById(req.params.cinemaId);
+        let cinema = await dashboardService.getCinemaInfoById(req.params.cinemaId);
         res.status(StatusCodes.OK).json(cinema);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const getAllRoomByCinemaId = async (req, res, next) => {
+    try {
+        let rooms = await dashboardService.getAllRoomByCinemaId(req.query.cinemaId);
+        res.status(StatusCodes.OK).json(rooms);
     } catch (err) {
         console.log(err);
         next(err);
@@ -198,23 +209,81 @@ const deleteRoom = async (req, res, next) => {
     }
 };
 
+// Schedule
+const getAllSchedules = async (req, res, next) => {
+    try {
+        let cinemas = await dashboardService.getAllSchedules();
+        res.status(StatusCodes.OK).json(cinemas);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const createNewSchedule = async (req, res, next) => {
+    try {
+        let scheduleData = req.body;
+        let response = await dashboardService.createNewSchedule(scheduleData);
+        res.status(StatusCodes.CREATED).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const updateSchedule = async (req, res, next) => {
+    try {
+        let scheduleData = req.body;
+        let response = await dashboardService.updateSchedule(scheduleData);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const deleteSchedule = async (req, res, next) => {
+    try {
+        let response = await dashboardService.deleteSchedule(req.params.scheduleId);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
 export const dashboardController = {
     access,
     getRevenueLast30Days,
+
+    // movie
     getAllMoviesByStatus,
     createNewMovie,
     updateMovie,
     deleteMovie,
+
+    // food
     getAllFoods,
     createNewFood,
     updateFood,
     deleteFood,
+
+    // cinema
     getAllCinemas,
     createNewCinema,
     updateCinema,
     deleteCinema,
-    getCinemaById,
+
+    // room
+    getCinemaInfoById,
+    getAllRoomByCinemaId,
     createNewRoom,
     updateRoom,
     deleteRoom,
+
+    // schedule
+    getAllSchedules,
+    createNewSchedule,
+    updateSchedule,
+    deleteSchedule,
 };

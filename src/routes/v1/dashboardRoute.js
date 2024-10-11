@@ -59,9 +59,22 @@ Router.route("/update-cinema").put(
 Router.route("/delete-cinema").delete(deleteImageMiddleware, dashboardController.deleteCinema);
 
 // Rooms
-Router.route("/get-cinema-by-id/:cinemaId").get(dashboardController.getCinemaById);
+Router.route("/get-cinema-info-by-id/:cinemaId").get(dashboardController.getCinemaInfoById);
+Router.route("/get-all-rooms-by-cinema-id").get(dashboardController.getAllRoomByCinemaId);
 Router.route("/create-new-room").post(roomValidation.createRoom, dashboardController.createNewRoom);
 Router.route("/update-room").put(roomValidation.updateRoom, dashboardController.updateRoom);
 Router.route("/delete-room/:roomId").delete(dashboardController.deleteRoom);
+
+// Schedule
+Router.route("/get-all-schedules").get(dashboardController.getAllSchedules);
+Router.route("/create-new-schedule").post(
+    // scheduleValidation.createSchedule,
+    dashboardController.createNewSchedule
+);
+Router.route("/update-schedule").put(
+    // scheduleValidation.updateSchedule,
+    dashboardController.updateSchedule
+);
+Router.route("/delete-schedule/:scheduleId").delete(dashboardController.deleteSchedule);
 
 export const dashboardRoute = Router;

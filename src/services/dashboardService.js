@@ -17,12 +17,12 @@ let getAllMoviesByStatus = async (status) => {
         let movies = [];
         if (status === "all") {
             movies = await db.Movie.findAll({
-                attributes: { exclude: ["createdAt", "updatedAt"] },
+                attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
             });
         } else {
             movies = await db.Movie.findAll({
                 where: { status: status },
-                attributes: { exclude: ["createdAt", "updatedAt"] },
+                attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
             });
         }
 
@@ -89,7 +89,7 @@ let deleteMovie = async (movieId) => {
 let getAllFoods = async () => {
     try {
         let foods = await db.Food_Menu.findAll({
-            attributes: { exclude: ["createdAt", "updatedAt"] },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         });
         return foods;
     } catch (err) {
@@ -150,7 +150,7 @@ let deleteFood = async (foodId) => {
 let getAllCinemas = async () => {
     try {
         let cinemas = await db.Cinema.findAll({
-            attributes: { exclude: ["createdAt", "updatedAt"] },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         });
         return cinemas;
     } catch (err) {
@@ -211,7 +211,7 @@ let deleteCinema = async (cinemaId) => {
 };
 
 // Room
-let getCinemaById = async (cinemaId) => {
+let getCinemaInfoById = async (cinemaId) => {
     try {
         // const currentTime = Date.now();
         const currentTime = new Date().setHours(19, 30, 0, 0);
@@ -219,17 +219,17 @@ let getCinemaById = async (cinemaId) => {
         // Get cinema and all rooms of cinema
         let cinemaInfo = await db.Cinema.findOne({
             where: { id: cinemaId },
-            attributes: { exclude: ["createdAt", "updatedAt"] },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
             include: [
                 {
                     model: db.Room,
                     as: "cinemaRooms",
-                    attributes: { exclude: ["createdAt", "updatedAt"] },
+                    attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
                     include: [
                         {
                             model: db.Schedule,
                             as: "roomSchedule",
-                            attributes: { exclude: ["createdAt", "updatedAt"] },
+                            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
                             where: {
                                 startTime: {
                                     [Op.lte]: currentTime,
@@ -246,6 +246,41 @@ let getCinemaById = async (cinemaId) => {
         });
 
         return cinemaInfo;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let getAllRoomByCinemaId = async (cinemaId) => {
+    try {
+        let rooms;
+        if (cinemaId === "all") {
+            rooms = await db.Room.findAll({
+                attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+                include: [
+                    {
+                        model: db.Cinema,
+                        as: "cinemaRooms",
+                        attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+                    },
+                ],
+            });
+        } else {
+            rooms = await db.Room.findAll({
+                where: { cinemaId: cinemaId },
+                attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+                include: [
+                    {
+                        model: db.Cinema,
+                        as: "cinemaRooms",
+                        attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+                    },
+                ],
+            });
+        }
+
+        return rooms;
     } catch (err) {
         console.log(err);
         throw err;
@@ -300,22 +335,101 @@ let deleteRoom = async (roomId) => {
     }
 };
 
+// schedule
+let getAllSchedules = async () => {
+    try {
+        let schedules = await db.Schedule.findAll({
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+        });
+        return schedules;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let createNewSchedule = async (scheduleData) => {
+    try {
+        let schedule = await db.Schedule.create(scheduleData);
+        return { message: "Create cinema successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let updateSchedule = async (scheduleData) => {
+    try {
+        let schedule = await db.Schedule.findOne({
+            where: { id: scheduleData.id },
+        });
+
+        if (!schedule) {
+            throw new ApiError(StatusCodes.BAD_GATEWAY, "Schedule need to delete not found");
+        }
+
+        await db.Schedule.update(scheduleData, {
+            where: { id: scheduleData.id },
+        });
+
+        return { message: "Update Schedule successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let deleteSchedule = async (scheduleId) => {
+    try {
+        let schedule = await db.Schedule.findOne({
+            where: { id: scheduleId },
+        });
+
+        if (!schedule)
+            throw new ApiError(
+                StatusCodes.BAD_REQUEST,
+                "Delete failed because Schedule is not exist!"
+            );
+        await db.Schedule.destroy({
+            where: { id: scheduleId },
+        });
+        return { message: "Delete Schedule successfully!" };
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const dashboardService = {
     getRevenueLast30Days,
+
+    // movie
     getAllMoviesByStatus,
     createNewMovie,
     updateMovie,
     deleteMovie,
+
+    // food
     getAllFoods,
     createNewFood,
     updateFood,
     deleteFood,
+
+    // cinema
     getAllCinemas,
     createNewCinema,
     updateCinema,
     deleteCinema,
-    getCinemaById,
+
+    // room
+    getCinemaInfoById,
+    getAllRoomByCinemaId,
     createNewRoom,
     updateRoom,
     deleteRoom,
+
+    // schedule
+    getAllSchedules,
+    createNewSchedule,
+    updateSchedule,
+    deleteSchedule,
 };
