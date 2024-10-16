@@ -3,7 +3,6 @@ import { StatusCodes } from "http-status-codes";
 import { userRoute } from "~/routes/v1/userRoute";
 import { dashboardRoute } from "~/routes/v1/dashboardRoute";
 import { imageRoute } from "./imageRoute";
-import db from "~/models";
 
 const Router = express.Router();
 

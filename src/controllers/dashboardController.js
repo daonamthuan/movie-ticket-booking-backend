@@ -48,6 +48,17 @@ const createNewMovie = async (req, res, next) => {
     }
 };
 
+const getMovieById = async (req, res, next) => {
+    try {
+        let movieId = req.params.movieId;
+        let response = await dashboardService.getMovieById(movieId);
+        res.status(StatusCodes.CREATED).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
 const updateMovie = async (req, res, next) => {
     try {
         let movieData = req.body;
@@ -220,6 +231,16 @@ const getAllSchedules = async (req, res, next) => {
     }
 };
 
+const getNextThreeDaysSchedule = async (req, res, next) => {
+    try {
+        let schedules = await dashboardService.getNextThreeDaysSchedule(req.query.movieId);
+        res.status(StatusCodes.OK).json(schedules);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
 const createNewSchedule = async (req, res, next) => {
     try {
         let scheduleData = req.body;
@@ -258,6 +279,7 @@ export const dashboardController = {
 
     // movie
     getAllMoviesByStatus,
+    getMovieById,
     createNewMovie,
     updateMovie,
     deleteMovie,
@@ -283,6 +305,7 @@ export const dashboardController = {
 
     // schedule
     getAllSchedules,
+    getNextThreeDaysSchedule,
     createNewSchedule,
     updateSchedule,
     deleteSchedule,

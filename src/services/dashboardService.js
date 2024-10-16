@@ -2,6 +2,7 @@ import db from "~/models";
 import ApiError from "~/utils/ApiError";
 import { StatusCodes } from "http-status-codes";
 import { Op } from "sequelize";
+import dayjs from "dayjs";
 
 let getRevenueLast30Days = async (userId) => {
     try {
@@ -27,6 +28,19 @@ let getAllMoviesByStatus = async (status) => {
         }
 
         return movies;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let getMovieById = async (movieId) => {
+    try {
+        let movie = await db.Movie.findOne({
+            where: { id: movieId },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+        });
+        return movie;
     } catch (err) {
         console.log(err);
         throw err;
@@ -151,6 +165,13 @@ let getAllCinemas = async () => {
     try {
         let cinemas = await db.Cinema.findAll({
             attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+            include: [
+                {
+                    model: db.Room,
+                    as: "cinemaRooms",
+                    attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+                },
+            ],
         });
         return cinemas;
     } catch (err) {
@@ -348,6 +369,30 @@ let getAllSchedules = async () => {
     }
 };
 
+let getNextThreeDaysSchedule = async (movieId) => {
+    try {
+        const now = dayjs().startOf("day").valueOf();
+        const endNextThreeDays = dayjs().add(3, "day").endOf("day").unix() * 1000;
+
+        let schedules = await db.Schedule.findAll({
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+            where: {
+                movieId: movieId,
+                startTime: {
+                    [Op.gt]: now,
+                    [Op.lt]: endNextThreeDays,
+                },
+            },
+            raw: true,
+        });
+
+        return schedules;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
 let createNewSchedule = async (scheduleData) => {
     try {
         let schedule = await db.Schedule.create(scheduleData);
@@ -404,6 +449,7 @@ export const dashboardService = {
 
     // movie
     getAllMoviesByStatus,
+    getMovieById,
     createNewMovie,
     updateMovie,
     deleteMovie,
@@ -429,6 +475,7 @@ export const dashboardService = {
 
     // schedule
     getAllSchedules,
+    getNextThreeDaysSchedule,
     createNewSchedule,
     updateSchedule,
     deleteSchedule,

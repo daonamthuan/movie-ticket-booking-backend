@@ -8,7 +8,6 @@ import { env } from "~/config/environment";
 const login = async (req, res, next) => {
     try {
         let userInfo = await userService.handleUserLogin(req.body);
-        console.log("userInfo in controller: ", userInfo);
         const accessToken = await JwtProvider.generateToken(
             userInfo,
             env.ACCESS_TOKEN_SECRET_KEY,

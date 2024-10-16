@@ -18,6 +18,7 @@ Router.route("/get-revenue").get(dashboardController.getRevenueLast30Days);
 
 // movies
 Router.route("/get-all-movies").get(dashboardController.getAllMoviesByStatus);
+Router.route("/get-movie-by-id/:movieId").get(dashboardController.getMovieById);
 Router.route("/create-new-movie").post(
     uploadImageMiddleware,
     movieValidation.createMovie,
@@ -67,14 +68,9 @@ Router.route("/delete-room/:roomId").delete(dashboardController.deleteRoom);
 
 // Schedule
 Router.route("/get-all-schedules").get(dashboardController.getAllSchedules);
-Router.route("/create-new-schedule").post(
-    // scheduleValidation.createSchedule,
-    dashboardController.createNewSchedule
-);
-Router.route("/update-schedule").put(
-    // scheduleValidation.updateSchedule,
-    dashboardController.updateSchedule
-);
+Router.route("/get-next-three-days-schedule").get(dashboardController.getNextThreeDaysSchedule);
+Router.route("/create-new-schedule").post(dashboardController.createNewSchedule);
+Router.route("/update-schedule").put(dashboardController.updateSchedule);
 Router.route("/delete-schedule/:scheduleId").delete(dashboardController.deleteSchedule);
 
 export const dashboardRoute = Router;

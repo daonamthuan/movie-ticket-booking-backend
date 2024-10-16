@@ -30,7 +30,7 @@ let handleUserLogin = async (userInfo) => {
     try {
         let user = await db.User.findOne({
             where: { email: userInfo.email },
-            attributes: { exclude: ["createdAt", "updatedAt"] },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
             raw: true,
         });
 
@@ -61,7 +61,7 @@ let getAllGenders = async () => {
     try {
         let genders = await db.Allcode.findAll({
             where: { type: "GENDER" },
-            attributes: { exclude: ["createdAt", "updatedAt"] },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         });
         return genders;
     } catch (err) {
@@ -73,7 +73,7 @@ let getAllRoles = async () => {
     try {
         let roles = await db.Allcode.findAll({
             where: { type: "ROLE" },
-            attributes: { exclude: ["createdAt", "updatedAt"] },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         });
 
         return roles;
@@ -86,7 +86,7 @@ let getAllMemberships = async () => {
     try {
         let memberships = await db.Allcode.findAll({
             where: { type: "MEMBERSHIP" },
-            attributes: { exclude: ["createdAt", "updatedAt"] },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         });
 
         return memberships;
@@ -99,7 +99,7 @@ let getAgeLimits = async () => {
     try {
         let ageLimits = await db.Allcode.findAll({
             where: { type: "AGE_LIMIT" },
-            attributes: { exclude: ["createdAt", "updatedAt"] },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         });
 
         return ageLimits;

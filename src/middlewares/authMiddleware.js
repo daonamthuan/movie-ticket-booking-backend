@@ -18,6 +18,12 @@ const isAuthorized = async (req, res, next) => {
         );
 
         req.jwtDecoded = accessTokenDecoded;
+        if (req.jwtDecoded.role !== "ADMIN") {
+            res.status(StatusCodes.UNAUTHORIZED).json({
+                message: "No permission to access",
+            });
+            return;
+        }
 
         next();
     } catch (err) {
@@ -30,6 +36,7 @@ const isAuthorized = async (req, res, next) => {
         }
 
         // If accessToken is invalid => return HTTP 401 - UNAUTHORIZED
+
         res.status(StatusCodes.UNAUTHORIZED).json({
             message: "Unauthorized! Please login ",
         });
