@@ -62,12 +62,14 @@ Router.route("/delete-cinema").delete(deleteImageMiddleware, dashboardController
 // Rooms
 Router.route("/get-cinema-info-by-id/:cinemaId").get(dashboardController.getCinemaInfoById);
 Router.route("/get-all-rooms-by-cinema-id").get(dashboardController.getAllRoomByCinemaId);
+Router.route("/get-room-by-id/:roomId").get(dashboardController.getRoomById);
 Router.route("/create-new-room").post(roomValidation.createRoom, dashboardController.createNewRoom);
 Router.route("/update-room").put(roomValidation.updateRoom, dashboardController.updateRoom);
 Router.route("/delete-room/:roomId").delete(dashboardController.deleteRoom);
 
 // Schedule
 Router.route("/get-all-schedules").get(dashboardController.getAllSchedules);
+Router.route("/get-schedule-by-id/:scheduleId").get(dashboardController.getScheduleById);
 Router.route("/get-next-three-days-schedule").get(dashboardController.getNextThreeDaysSchedule);
 Router.route("/create-new-schedule").post(dashboardController.createNewSchedule);
 Router.route("/update-schedule").put(dashboardController.updateSchedule);

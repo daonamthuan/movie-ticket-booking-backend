@@ -308,6 +308,26 @@ let getAllRoomByCinemaId = async (cinemaId) => {
     }
 };
 
+let getRoomById = async (roomId) => {
+    try {
+        let room = await db.Room.findOne({
+            where: { id: roomId },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+            include: [
+                {
+                    model: db.Cinema,
+                    as: "cinemaRooms",
+                    attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+                },
+            ],
+        });
+        return room;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
 let createNewRoom = async (roomData) => {
     try {
         let room = await db.Room.create(roomData);
@@ -363,6 +383,19 @@ let getAllSchedules = async () => {
             attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         });
         return schedules;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let getScheduleById = async (scheduleId) => {
+    try {
+        let schedule = await db.Schedule.findOne({
+            where: { id: scheduleId },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+        });
+        return schedule;
     } catch (err) {
         console.log(err);
         throw err;
@@ -469,12 +502,14 @@ export const dashboardService = {
     // room
     getCinemaInfoById,
     getAllRoomByCinemaId,
+    getRoomById,
     createNewRoom,
     updateRoom,
     deleteRoom,
 
     // schedule
     getAllSchedules,
+    getScheduleById,
     getNextThreeDaysSchedule,
     createNewSchedule,
     updateSchedule,

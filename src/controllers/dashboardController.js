@@ -188,6 +188,16 @@ const getAllRoomByCinemaId = async (req, res, next) => {
     }
 };
 
+const getRoomById = async (req, res, next) => {
+    try {
+        let room = await dashboardService.getRoomById(req.params.roomId);
+        res.status(StatusCodes.OK).json(room);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
 const createNewRoom = async (req, res, next) => {
     try {
         let roomData = req.body;
@@ -225,6 +235,16 @@ const getAllSchedules = async (req, res, next) => {
     try {
         let cinemas = await dashboardService.getAllSchedules();
         res.status(StatusCodes.OK).json(cinemas);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const getScheduleById = async (req, res, next) => {
+    try {
+        let schedule = await dashboardService.getScheduleById(req.params.scheduleId);
+        res.status(StatusCodes.OK).json(schedule);
     } catch (err) {
         console.log(err);
         next(err);
@@ -299,12 +319,14 @@ export const dashboardController = {
     // room
     getCinemaInfoById,
     getAllRoomByCinemaId,
+    getRoomById,
     createNewRoom,
     updateRoom,
     deleteRoom,
 
     // schedule
     getAllSchedules,
+    getScheduleById,
     getNextThreeDaysSchedule,
     createNewSchedule,
     updateSchedule,
