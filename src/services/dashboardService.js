@@ -505,11 +505,13 @@ let updatePaymentSuccess = async (bookingId) => {
         booking.status = "PAID";
         await booking.save();
 
-        let voucher = await db.Voucher.findOne({
-            where: { id: booking.voucherId },
-        });
-        voucher.status = "USED";
-        await voucher.save();
+        if (booking.voucherId) {
+            let voucher = await db.Voucher.findOne({
+                where: { id: booking.voucherId },
+            });
+            voucher.status = "USED";
+            await voucher.save();
+        }
 
         return { message: "Update paid booking successfully!" };
     } catch (err) {
@@ -614,6 +616,29 @@ const createSeatBookings = async (bookingId, seats) => {
     }
 };
 
+const getAllBookedSeats = async (scheduleId) => {
+    try {
+        let bookings = await db.Booking.findAll({
+            where: { scheduleId: scheduleId, status: "PAID" },
+        });
+
+        let bookingIds = bookings.map((booking) => booking.id);
+
+        let bookedSeats = await db.Seat_Booking.findAll({
+            where: {
+                bookingId: {
+                    [Op.in]: bookingIds,
+                },
+            },
+        });
+
+        return bookedSeats;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
 // Food_Booking
 const createFoodBookings = async (bookingId, foods) => {
     try {
@@ -686,6 +711,7 @@ export const dashboardService = {
 
     // Seat_Booking
     createSeatBookings,
+    getAllBookedSeats,
 
     // Food_Booking
     createFoodBookings,

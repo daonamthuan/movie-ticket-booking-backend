@@ -312,7 +312,6 @@ const getVoucher = async (req, res, next) => {
 const createPaymentLink = async (req, res, next) => {
     try {
         let bookingId = await dashboardService.createNewBookingId();
-        console.log("Check payment link bookingId: ", bookingId);
         const orderTemp = {
             orderCode: bookingId,
             amount: 2000,
@@ -397,6 +396,17 @@ const updateBooking = async (req, res, next) => {
     }
 };
 
+// Seat_Booking
+const getAllBookedSeats = async (req, res, next) => {
+    try {
+        let bookedSeats = await dashboardService.getAllBookedSeats(req.query.scheduleId);
+        res.status(StatusCodes.OK).json(bookedSeats);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
 export const dashboardController = {
     access,
     getRevenueLast30Days,
@@ -448,4 +458,7 @@ export const dashboardController = {
     getBookingDetailById,
     createNewBookingId,
     updateBooking,
+
+    // Seat_Booking
+    getAllBookedSeats,
 };

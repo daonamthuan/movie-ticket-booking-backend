@@ -88,4 +88,7 @@ Router.route("/get-booking-detail-by-id").get(dashboardController.getBookingDeta
 Router.route("/create-new-booking-id").post(dashboardController.createNewBookingId);
 Router.route("/update-booking").put(dashboardController.updateBooking);
 
+// Seat_Booking
+Router.route("/get-all-booked-seats").get(dashboardController.getAllBookedSeats);
+
 export const dashboardRoute = Router;
