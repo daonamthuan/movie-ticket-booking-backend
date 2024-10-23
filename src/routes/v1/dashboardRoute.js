@@ -75,4 +75,17 @@ Router.route("/create-new-schedule").post(dashboardController.createNewSchedule)
 Router.route("/update-schedule").put(dashboardController.updateSchedule);
 Router.route("/delete-schedule/:scheduleId").delete(dashboardController.deleteSchedule);
 
+// Voucher
+Router.route("/get-voucher").get(dashboardController.getVoucher);
+
+// Payment
+Router.route("/create-payment-link").post(dashboardController.createPaymentLink);
+Router.route("/update-payment-success").put(dashboardController.updatePaymentSuccess);
+Router.route("/update-payment-cancelled").put(dashboardController.updatePaymentCancelled);
+
+// Booking
+Router.route("/get-booking-detail-by-id").get(dashboardController.getBookingDetailById);
+Router.route("/create-new-booking-id").post(dashboardController.createNewBookingId);
+Router.route("/update-booking").put(dashboardController.updateBooking);
+
 export const dashboardRoute = Router;

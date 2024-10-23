@@ -131,14 +131,12 @@ const getAgeLimits = async (req, res, next) => {
 
 const createNewUser = async (req, res, next) => {
     try {
-        console.log("Req.body : ", req.body);
         if (req.file) {
             req.body.image = req.file.path;
             const uploadedImage = {
                 url: req.file.path,
                 publicId: req.file.filename,
             };
-            console.log("Check upload cloudinary image: ", uploadedImage);
         }
 
         let response = await userService.createNewUser(req.body);

@@ -11,18 +11,14 @@ module.exports = {
             },
             {
                 bookingId: 2,
-                foodId: 2,
+                foodId: 1,
                 quantity: 1,
             },
-            {
-                bookingId: 2,
-                foodId: 10,
-                quantity: 1,
-            },
+
             {
                 bookingId: 3,
-                foodId: 8,
-                quantity: 2,
+                foodId: 2,
+                quantity: 1,
             },
         ]);
     },

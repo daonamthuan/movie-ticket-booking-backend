@@ -12,4 +12,8 @@ export const env = {
     CLOUD_NAME: process.env.CLOUD_NAME,
     CLOUD_API_KEY: process.env.CLOUD_API_KEY,
     CLOUD_API_SECRET: process.env.CLOUD_API_SECRET,
+
+    CLIENT_ID: process.env.CLIENT_ID,
+    API_KEY: process.env.API_KEY,
+    CHECKSUM_KEY: process.env.CHECKSUM_KEY,
 };

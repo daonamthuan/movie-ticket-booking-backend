@@ -6,7 +6,7 @@ module.exports = {
         return queryInterface.bulkInsert("Vouchers", [
             {
                 voucherCode: "GIAMGIA50K",
-                amount: 500000,
+                amount: 50000,
                 status: "UNUSED",
                 validFrom: new Date().getTime(),
                 validUntil: BigInt(Date.now() + 7 * 86400000),

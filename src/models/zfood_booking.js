@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             });
             Food_Booking.belongsTo(models.Food_Menu, {
                 foreignKey: "foodId",
-                as: "food",
+                as: "foodInfo",
             });
         }
     }

@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable("Bookings", {
+        await queryInterface.createTable("Seat_Bookings", {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -10,35 +10,20 @@ module.exports = {
                 type: Sequelize.INTEGER,
             },
 
-            userId: {
+            bookingId: {
                 type: Sequelize.INTEGER,
             },
-            scheduleId: {
-                type: Sequelize.INTEGER,
-            },
-            totalSeatAmount: {
-                type: Sequelize.INTEGER,
-            },
-            totalFoodAmount: {
-                type: Sequelize.INTEGER,
-            },
-            subtotal: {
-                type: Sequelize.INTEGER,
-            },
-            voucherId: {
-                type: Sequelize.INTEGER,
-            },
-            voucherAmount: {
-                type: Sequelize.INTEGER,
-            },
-            total: {
-                type: Sequelize.INTEGER,
-            },
-            payment: {
+            seatName: {
                 type: Sequelize.STRING,
             },
-            status: {
+            seatPosition: {
                 type: Sequelize.STRING,
+            },
+            seatType: {
+                type: Sequelize.INTEGER,
+            },
+            price: {
+                type: Sequelize.INTEGER,
             },
 
             createdAt: {
@@ -54,6 +39,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable("Bookings");
+        await queryInterface.dropTable("Seat_Bookings");
     },
 };

@@ -18,7 +18,12 @@ module.exports = (sequelize, DataTypes) => {
 
             Booking.hasMany(models.Food_Booking, {
                 foreignKey: "bookingId",
-                as: "foodData",
+                as: "foodBooking",
+            });
+
+            Booking.hasMany(models.Seat_Booking, {
+                foreignKey: "bookingId",
+                as: "seatBooking",
             });
         }
     }
@@ -26,16 +31,14 @@ module.exports = (sequelize, DataTypes) => {
         {
             userId: DataTypes.INTEGER,
             scheduleId: DataTypes.INTEGER,
-            seatPosition: DataTypes.STRING,
             totalSeatAmount: DataTypes.INTEGER,
             totalFoodAmount: DataTypes.INTEGER,
-            u22Discount: DataTypes.INTEGER,
-
             subtotal: DataTypes.INTEGER,
             voucherId: DataTypes.INTEGER,
-            voucherDiscount: DataTypes.INTEGER,
+            voucherAmount: DataTypes.INTEGER,
             total: DataTypes.INTEGER,
             payment: DataTypes.STRING,
+            status: DataTypes.STRING,
         },
         {
             sequelize,

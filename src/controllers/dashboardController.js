@@ -1,5 +1,10 @@
 import { dashboardService } from "~/services/dashboardService";
 import { StatusCodes } from "http-status-codes";
+import { or } from "sequelize";
+import PayOS from "@payos/node";
+import { env } from "~/config/environment";
+
+const payos = new PayOS(env.CLIENT_ID, env.API_KEY, env.CHECKSUM_KEY);
 
 const access = async (req, res, next) => {
     try {
@@ -93,7 +98,6 @@ const getAllFoods = async (req, res, next) => {
 
 const createNewFood = async (req, res, next) => {
     try {
-        console.log("Check req.body create food: ", req.body);
         let foodData = req.body;
         let response = await dashboardService.createNewFood(foodData);
         res.status(StatusCodes.CREATED).json(response);
@@ -293,6 +297,106 @@ const deleteSchedule = async (req, res, next) => {
     }
 };
 
+// Voucher
+const getVoucher = async (req, res, next) => {
+    try {
+        let voucher = await dashboardService.getVoucher(req.query.voucherCode);
+        res.status(StatusCodes.OK).json(voucher);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+// Payment
+const createPaymentLink = async (req, res, next) => {
+    try {
+        let bookingId = await dashboardService.createNewBookingId();
+        console.log("Check payment link bookingId: ", bookingId);
+        const orderTemp = {
+            orderCode: bookingId,
+            amount: 2000,
+            description: "Thanh toan ve xem phim",
+            returnUrl: `http://localhost:5173/payment-success`,
+            cancelUrl: `http://localhost:5173/payment-cancel`,
+            expiredAt: Math.floor(Date.now() / 1000) + 60 * 10,
+        };
+
+        const paymentLink = await payos.createPaymentLink(orderTemp);
+        res.status(StatusCodes.OK).json({
+            url: paymentLink.checkoutUrl,
+            orderCode: paymentLink.orderCode,
+        });
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const updatePaymentSuccess = async (req, res, next) => {
+    try {
+        let response = await dashboardService.updatePaymentSuccess(req.query.bookingId);
+        res.status(StatusCodes.OK).json({ message: "update paid booking successfully" });
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const updatePaymentCancelled = async (req, res, next) => {
+    try {
+        let response = await dashboardService.updatePaymentCancelled(req.query.bookingId);
+        res.status(StatusCodes.OK).json({ message: "update cancelled booking successfully" });
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+// Booking
+const getBookingDetailById = async (req, res, next) => {
+    try {
+        let bookingDetail = await dashboardService.getBookingDetailById(req.query.bookingId);
+        res.status(StatusCodes.OK).json(bookingDetail);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const createNewBookingId = async (req, res, next) => {
+    try {
+        let bookingId = await dashboardService.createNewBookingId();
+        res.status(StatusCodes.OK).json({ bookingId: bookingId });
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const updateBooking = async (req, res, next) => {
+    try {
+        let data = req.body;
+        let response = await dashboardService.updateBooking(data.bookingData);
+
+        let seatBookingsResponse = await dashboardService.createSeatBookings(
+            data.bookingId,
+            data.selectedSeats
+        );
+        let foodBookingsResponse = await dashboardService.createFoodBookings(
+            data.bookingId,
+            data.selectedFoods
+        );
+
+        res.status(StatusCodes.OK).json({
+            message: "Create new booking with seats and foods successfully",
+        });
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
 export const dashboardController = {
     access,
     getRevenueLast30Days,
@@ -331,4 +435,17 @@ export const dashboardController = {
     createNewSchedule,
     updateSchedule,
     deleteSchedule,
+
+    // Voucher
+    getVoucher,
+
+    // Payment
+    createPaymentLink,
+    updatePaymentSuccess,
+    updatePaymentCancelled,
+
+    // Booking
+    getBookingDetailById,
+    createNewBookingId,
+    updateBooking,
 };

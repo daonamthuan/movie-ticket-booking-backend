@@ -345,7 +345,7 @@ let updateRoom = async (roomData) => {
         });
 
         if (!room) {
-            throw new ApiError(StatusCodes.BAD_GATEWAY, "room need to delete not found");
+            throw new ApiError(StatusCodes.BAD_GATEWAY, "room need to update not found");
         }
 
         await db.Room.update(roomData, {
@@ -477,6 +477,163 @@ let deleteSchedule = async (scheduleId) => {
     }
 };
 
+// Voucher
+let getVoucher = async (voucherCode) => {
+    try {
+        let voucher = await db.Voucher.findOne({
+            where: { voucherCode: voucherCode },
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+        });
+        return voucher;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+// Payment
+let updatePaymentSuccess = async (bookingId) => {
+    try {
+        let booking = await db.Booking.findOne({
+            where: { id: bookingId },
+        });
+
+        if (!booking) {
+            throw new ApiError(StatusCodes.BAD_GATEWAY, "booking need to update not found");
+        }
+
+        booking.status = "PAID";
+        await booking.save();
+
+        let voucher = await db.Voucher.findOne({
+            where: { id: booking.voucherId },
+        });
+        voucher.status = "USED";
+        await voucher.save();
+
+        return { message: "Update paid booking successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let updatePaymentCancelled = async (bookingId) => {
+    try {
+        let booking = await db.Booking.findOne({
+            where: { id: bookingId },
+        });
+
+        if (!booking) {
+            throw new ApiError(StatusCodes.BAD_GATEWAY, "booking need to update not found");
+        }
+
+        booking.status = "CANCELLED";
+        await booking.save();
+
+        return { message: "Update cancelled booking successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+// Booking
+let getBookingDetailById = async (bookingId) => {
+    try {
+        let bookingDetail = await db.Booking.findOne({
+            where: { id: bookingId },
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+            include: [
+                {
+                    model: db.Seat_Booking,
+                    as: "seatBooking",
+                    attributes: { exclude: ["createdAt", "updatedAt"] },
+                },
+                {
+                    model: db.Food_Booking,
+                    as: "foodBooking",
+                    attributes: { exclude: ["createdAt", "updatedAt"] },
+                    include: [
+                        {
+                            model: db.Food_Menu,
+                            as: "foodInfo",
+                            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+                        },
+                    ],
+                },
+            ],
+        });
+        return bookingDetail;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+const createNewBookingId = async () => {
+    try {
+        let booking = await db.Booking.create({});
+        return booking.id;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+const updateBooking = async (bookingData) => {
+    try {
+        await db.Booking.update(bookingData, { where: { id: bookingData.id } });
+
+        return { code: 1, message: "Update booking successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+// Seat_Booking
+const createSeatBookings = async (bookingId, seats) => {
+    try {
+        let formatSeatBookingsData = seats.map((seat) => {
+            return {
+                bookingId: bookingId,
+                seatName: seat.seatName,
+                seatPosition: JSON.stringify([seat.rowIndex, seat.colIndex]),
+                seatType: seat.type,
+                price: seat.type === 1 ? 60000 : 75000,
+            };
+        });
+
+        let seatBookingData = await db.Seat_Booking.bulkCreate(formatSeatBookingsData);
+
+        return { code: 1, message: "Create seat_bookings successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+// Food_Booking
+const createFoodBookings = async (bookingId, foods) => {
+    try {
+        let formatFoodBookingsData = foods.map((item) => {
+            return {
+                bookingId: bookingId,
+                foodId: item.food.id,
+                quantity: item.quantity,
+            };
+        });
+
+        let foodBookingData = await db.Food_Booking.bulkCreate(formatFoodBookingsData);
+
+        return { code: 1, message: "Create food_bookings successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
 export const dashboardService = {
     getRevenueLast30Days,
 
@@ -514,4 +671,22 @@ export const dashboardService = {
     createNewSchedule,
     updateSchedule,
     deleteSchedule,
+
+    // Voucher
+    getVoucher,
+
+    // Payment
+    updatePaymentSuccess,
+    updatePaymentCancelled,
+
+    // Booking
+    getBookingDetailById,
+    createNewBookingId,
+    updateBooking,
+
+    // Seat_Booking
+    createSeatBookings,
+
+    // Food_Booking
+    createFoodBookings,
 };
