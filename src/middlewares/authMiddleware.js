@@ -19,6 +19,7 @@ const isAuthorized = async (req, res, next) => {
 
         req.jwtDecoded = accessTokenDecoded;
         if (req.jwtDecoded.role !== "ADMIN") {
+            console.log("Check jwt decoded: ", req.jwtDecoded);
             res.status(StatusCodes.UNAUTHORIZED).json({
                 message: "No permission to access",
             });

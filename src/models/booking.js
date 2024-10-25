@@ -18,12 +18,18 @@ module.exports = (sequelize, DataTypes) => {
 
             Booking.hasMany(models.Food_Booking, {
                 foreignKey: "bookingId",
-                as: "foodBooking",
+                as: "foodBookings",
             });
 
             Booking.hasMany(models.Seat_Booking, {
                 foreignKey: "bookingId",
-                as: "seatBooking",
+                as: "seatBookings",
+            });
+
+            Booking.belongsTo(models.Schedule, {
+                foreignKey: "scheduleId",
+                targetKey: "id",
+                as: "schedule",
             });
         }
     }

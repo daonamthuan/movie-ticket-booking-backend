@@ -12,7 +12,18 @@ module.exports = (sequelize, DataTypes) => {
             Schedule.belongsTo(models.Room, {
                 foreignKey: "roomId",
                 targetKey: "id",
-                as: "roomSchedule",
+                as: "room",
+            });
+
+            Schedule.belongsTo(models.Movie, {
+                foreignKey: "movieId",
+                targetKey: "id",
+                as: "movie",
+            });
+
+            Schedule.hasMany(models.Booking, {
+                foreignKey: "scheduleId",
+                as: "bookings",
             });
         }
     }

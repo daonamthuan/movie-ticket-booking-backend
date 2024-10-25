@@ -353,10 +353,10 @@ const updatePaymentCancelled = async (req, res, next) => {
 };
 
 // Booking
-const getBookingDetailById = async (req, res, next) => {
+const getAllBookingByUserId = async (req, res, next) => {
     try {
-        let bookingDetail = await dashboardService.getBookingDetailById(req.query.bookingId);
-        res.status(StatusCodes.OK).json(bookingDetail);
+        let bookings = await dashboardService.getAllBookingByUserId(req.query.userId);
+        res.status(StatusCodes.OK).json(bookings);
     } catch (err) {
         console.log(err);
         next(err);
@@ -455,7 +455,7 @@ export const dashboardController = {
     updatePaymentCancelled,
 
     // Booking
-    getBookingDetailById,
+    getAllBookingByUserId,
     createNewBookingId,
     updateBooking,
 

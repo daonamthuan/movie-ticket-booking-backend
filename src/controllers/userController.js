@@ -11,7 +11,8 @@ const login = async (req, res, next) => {
         const accessToken = await JwtProvider.generateToken(
             userInfo,
             env.ACCESS_TOKEN_SECRET_KEY,
-            "1h"
+            5
+            // "1h"
         );
 
         const refreshToken = await JwtProvider.generateToken(
@@ -60,10 +61,19 @@ const refreshToken = async (req, res, next) => {
             refreshTokenFromCookie,
             env.REFRESH_TOKEN_SECRET_KEY
         );
+        console.log("Verify refresh token successfully");
 
         const userInfo = {
             id: refreshTokenDecoded.id,
             email: refreshTokenDecoded.email,
+            firstName: refreshTokenDecoded.firstName,
+            lastName: refreshTokenDecoded.lastName,
+            phoneNumber: refreshTokenDecoded.phoneNumber,
+            gender: refreshTokenDecoded.gender,
+            role: refreshTokenDecoded.role,
+            membership: refreshTokenDecoded.membership,
+            birthday: refreshTokenDecoded.birthday,
+            image: refreshTokenDecoded.image,
         };
 
         const accessToken = await JwtProvider.generateToken(

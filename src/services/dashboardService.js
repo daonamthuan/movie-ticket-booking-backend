@@ -168,7 +168,7 @@ let getAllCinemas = async () => {
             include: [
                 {
                     model: db.Room,
-                    as: "cinemaRooms",
+                    as: "rooms",
                     attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
                 },
             ],
@@ -244,12 +244,12 @@ let getCinemaInfoById = async (cinemaId) => {
             include: [
                 {
                     model: db.Room,
-                    as: "cinemaRooms",
+                    as: "rooms",
                     attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
                     include: [
                         {
                             model: db.Schedule,
-                            as: "roomSchedule",
+                            as: "schedules",
                             attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
                             where: {
                                 startTime: {
@@ -282,7 +282,7 @@ let getAllRoomByCinemaId = async (cinemaId) => {
                 include: [
                     {
                         model: db.Cinema,
-                        as: "cinemaRooms",
+                        as: "cinema",
                         attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
                     },
                 ],
@@ -294,7 +294,7 @@ let getAllRoomByCinemaId = async (cinemaId) => {
                 include: [
                     {
                         model: db.Cinema,
-                        as: "cinemaRooms",
+                        as: "cinema",
                         attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
                     },
                 ],
@@ -316,7 +316,7 @@ let getRoomById = async (roomId) => {
             include: [
                 {
                     model: db.Cinema,
-                    as: "cinemaRooms",
+                    as: "cinema",
                     attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
                 },
             ],
@@ -541,26 +541,46 @@ let updatePaymentCancelled = async (bookingId) => {
 };
 
 // Booking
-let getBookingDetailById = async (bookingId) => {
+let getAllBookingByUserId = async (userId) => {
     try {
-        let bookingDetail = await db.Booking.findOne({
-            where: { id: bookingId },
+        let bookingDetail = await db.Booking.findAll({
+            where: { ...(userId !== "ALL" && { userId: userId }), status: "PAID" },
             attributes: { exclude: ["createdAt", "updatedAt"] },
             include: [
                 {
                     model: db.Seat_Booking,
-                    as: "seatBooking",
-                    attributes: { exclude: ["createdAt", "updatedAt"] },
+                    as: "seatBookings",
+                    attributes: ["seatName", "seatPosition", "seatType", "price"],
                 },
                 {
                     model: db.Food_Booking,
-                    as: "foodBooking",
-                    attributes: { exclude: ["createdAt", "updatedAt"] },
+                    as: "foodBookings",
+                    attributes: ["quantity"],
                     include: [
                         {
                             model: db.Food_Menu,
                             as: "foodInfo",
-                            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+                            attributes: ["foodName", "price"],
+                        },
+                    ],
+                },
+                {
+                    model: db.Schedule,
+                    as: "schedule",
+                    attributes: ["startTime", "endTime"],
+                    include: [
+                        {
+                            model: db.Room,
+                            as: "room",
+                            attributes: ["roomName"],
+                            include: [
+                                { model: db.Cinema, as: "cinema", attributes: ["cinemaName"] },
+                            ],
+                        },
+                        {
+                            model: db.Movie,
+                            as: "movie",
+                            attributes: ["movieName", "ageLimit", "audioType", "movieFormat"],
                         },
                     ],
                 },
@@ -705,7 +725,7 @@ export const dashboardService = {
     updatePaymentCancelled,
 
     // Booking
-    getBookingDetailById,
+    getAllBookingByUserId,
     createNewBookingId,
     updateBooking,
 

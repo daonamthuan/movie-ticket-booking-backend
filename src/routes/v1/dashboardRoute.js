@@ -84,7 +84,7 @@ Router.route("/update-payment-success").put(dashboardController.updatePaymentSuc
 Router.route("/update-payment-cancelled").put(dashboardController.updatePaymentCancelled);
 
 // Booking
-Router.route("/get-booking-detail-by-id").get(dashboardController.getBookingDetailById);
+Router.route("/get-all-booking-by-user-id").get(dashboardController.getAllBookingByUserId);
 Router.route("/create-new-booking-id").post(dashboardController.createNewBookingId);
 Router.route("/update-booking").put(dashboardController.updateBooking);
 

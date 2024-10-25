@@ -12,12 +12,12 @@ module.exports = (sequelize, DataTypes) => {
             Room.belongsTo(models.Cinema, {
                 foreignKey: "cinemaId",
                 targetKey: "id",
-                as: "cinemaRooms",
+                as: "cinema",
             });
 
             Room.hasMany(models.Schedule, {
                 foreignKey: "roomId",
-                as: "roomSchedule",
+                as: "schedules",
             });
         }
     }
