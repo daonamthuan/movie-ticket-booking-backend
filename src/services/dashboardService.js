@@ -1,8 +1,9 @@
 import db from "~/models";
 import ApiError from "~/utils/ApiError";
 import { StatusCodes } from "http-status-codes";
-import { Op } from "sequelize";
+import { Op, fn, col, literal } from "sequelize";
 import dayjs from "dayjs";
+import booking from "~/models/booking";
 
 let getRevenueLast30Days = async (userId) => {
     try {
@@ -478,7 +479,19 @@ let deleteSchedule = async (scheduleId) => {
 };
 
 // Voucher
-let getVoucher = async (voucherCode) => {
+let getAllVouchers = async () => {
+    try {
+        let vouchers = await db.Voucher.findAll({
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+        });
+        return vouchers;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let getVoucherByCode = async (voucherCode) => {
     try {
         let voucher = await db.Voucher.findOne({
             where: { voucherCode: voucherCode },
@@ -487,6 +500,57 @@ let getVoucher = async (voucherCode) => {
         return voucher;
     } catch (err) {
         console.log(err);
+        throw err;
+    }
+};
+
+let createNewVoucher = async (voucherData) => {
+    try {
+        let voucher = await db.Voucher.create(voucherData);
+        return { message: "Create voucher successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let updateVoucher = async (voucherData) => {
+    try {
+        let voucher = await db.Voucher.findOne({
+            where: { id: voucherData.id },
+        });
+
+        if (!voucher) {
+            throw new ApiError(StatusCodes.BAD_GATEWAY, "room need to update not found");
+        }
+
+        await db.Voucher.update(voucherData, {
+            where: { id: voucherData.id },
+        });
+
+        return { message: "Update voucher successfully!" };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+let deleteVoucher = async (voucherId) => {
+    try {
+        let voucher = await db.Voucher.findOne({
+            where: { id: voucherId },
+        });
+
+        if (!voucher)
+            throw new ApiError(
+                StatusCodes.BAD_REQUEST,
+                "Delete failed because voucher is not exist!"
+            );
+        await db.Voucher.destroy({
+            where: { id: voucherId },
+        });
+        return { message: "Delete voucher successfully!" };
+    } catch (err) {
         throw err;
     }
 };
@@ -679,6 +743,64 @@ const createFoodBookings = async (bookingId, foods) => {
     }
 };
 
+// Overview
+const getOverviewData = async () => {
+    try {
+        let startOfMonth = dayjs().startOf("month").valueOf();
+        let endOfMonth = dayjs().endOf("month").valueOf();
+
+        const userCount = await db.User.count();
+        const movieCount = await db.Movie.count({
+            where: { status: "now-showing" },
+        });
+
+        const bookings = await db.Booking.findAll({
+            where: { status: "PAID" },
+            attributes: ["id", "total", [col("schedule.startTime"), "startTime"]],
+            include: [
+                {
+                    model: db.Schedule,
+                    attributes: [],
+                    as: "schedule",
+                    where: {
+                        startTime: {
+                            [Op.between]: [startOfMonth, endOfMonth],
+                        },
+                    },
+                },
+            ],
+        });
+
+        const updatedBookings = bookings.map((booking) => {
+            const plainBooking = booking.toJSON();
+
+            return {
+                ...plainBooking,
+                startTime: dayjs(plainBooking.startTime).startOf("day").valueOf(),
+            };
+        });
+
+        const bookingIds = bookings.map((booking) => booking.id);
+        const ticketCount = await db.Seat_Booking.count({
+            where: {
+                bookingId: {
+                    [Op.in]: bookingIds,
+                },
+            },
+        });
+
+        return {
+            userCount: userCount,
+            movieCount: movieCount,
+            ticketCount: ticketCount,
+            bookings: updatedBookings,
+        };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
 export const dashboardService = {
     getRevenueLast30Days,
 
@@ -718,7 +840,11 @@ export const dashboardService = {
     deleteSchedule,
 
     // Voucher
-    getVoucher,
+    getAllVouchers,
+    getVoucherByCode,
+    createNewVoucher,
+    updateVoucher,
+    deleteVoucher,
 
     // Payment
     updatePaymentSuccess,
@@ -735,4 +861,7 @@ export const dashboardService = {
 
     // Food_Booking
     createFoodBookings,
+
+    /// Overview
+    getOverviewData,
 };

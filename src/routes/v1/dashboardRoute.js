@@ -76,7 +76,11 @@ Router.route("/update-schedule").put(dashboardController.updateSchedule);
 Router.route("/delete-schedule/:scheduleId").delete(dashboardController.deleteSchedule);
 
 // Voucher
-Router.route("/get-voucher").get(dashboardController.getVoucher);
+Router.route("/get-all-vouchers").get(dashboardController.getAllVouchers);
+Router.route("/get-voucher-by-code").get(dashboardController.getVoucherByCode);
+Router.route("/create-new-voucher").post(dashboardController.createNewVoucher);
+Router.route("/update-voucher").put(dashboardController.updateVoucher);
+Router.route("/delete-voucher").delete(dashboardController.deleteVoucher);
 
 // Payment
 Router.route("/create-payment-link").post(dashboardController.createPaymentLink);
@@ -90,5 +94,8 @@ Router.route("/update-booking").put(dashboardController.updateBooking);
 
 // Seat_Booking
 Router.route("/get-all-booked-seats").get(dashboardController.getAllBookedSeats);
+
+// Overview
+Router.route("/get-overview-data").get(dashboardController.getOverviewData);
 
 export const dashboardRoute = Router;

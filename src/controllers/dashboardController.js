@@ -298,10 +298,50 @@ const deleteSchedule = async (req, res, next) => {
 };
 
 // Voucher
-const getVoucher = async (req, res, next) => {
+const getAllVouchers = async (req, res, next) => {
     try {
-        let voucher = await dashboardService.getVoucher(req.query.voucherCode);
+        let vouchers = await dashboardService.getAllVouchers();
+        res.status(StatusCodes.OK).json(vouchers);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const getVoucherByCode = async (req, res, next) => {
+    try {
+        let voucher = await dashboardService.getVoucherByCode(req.query.voucherCode);
         res.status(StatusCodes.OK).json(voucher);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const createNewVoucher = async (req, res, next) => {
+    try {
+        let response = await dashboardService.createNewVoucher(req.body);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const updateVoucher = async (req, res, next) => {
+    try {
+        let response = await dashboardService.updateVoucher(req.body);
+        res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
+const deleteVoucher = async (req, res, next) => {
+    try {
+        let response = await dashboardService.deleteVoucher(req.query.voucherId);
+        res.status(StatusCodes.OK).json(response);
     } catch (err) {
         console.log(err);
         next(err);
@@ -407,6 +447,17 @@ const getAllBookedSeats = async (req, res, next) => {
     }
 };
 
+// Overview
+const getOverviewData = async (req, res, next) => {
+    try {
+        let data = await dashboardService.getOverviewData();
+        res.status(StatusCodes.OK).json(data);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+
 export const dashboardController = {
     access,
     getRevenueLast30Days,
@@ -447,7 +498,11 @@ export const dashboardController = {
     deleteSchedule,
 
     // Voucher
-    getVoucher,
+    getAllVouchers,
+    getVoucherByCode,
+    createNewVoucher,
+    updateVoucher,
+    deleteVoucher,
 
     // Payment
     createPaymentLink,
@@ -461,4 +516,7 @@ export const dashboardController = {
 
     // Seat_Booking
     getAllBookedSeats,
+
+    // Overview
+    getOverviewData,
 };

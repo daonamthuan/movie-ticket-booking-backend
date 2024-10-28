@@ -61,7 +61,6 @@ const refreshToken = async (req, res, next) => {
             refreshTokenFromCookie,
             env.REFRESH_TOKEN_SECRET_KEY
         );
-        console.log("Verify refresh token successfully");
 
         const userInfo = {
             id: refreshTokenDecoded.id,

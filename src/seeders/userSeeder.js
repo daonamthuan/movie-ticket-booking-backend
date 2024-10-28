@@ -31,7 +31,7 @@ module.exports = {
                 updatedAt: new Date(),
             },
             {
-                email: "customer1@gmail.com",
+                email: "customer@gmail.com",
                 password: "$2a$10$TQtObSfvQSFgcvBemyidjOwi66UkExGP0hrDwFwMUL3b.jk7pn82W",
                 firstName: "Trà",
                 lastName: "Nguyễn Thị",
