@@ -60,7 +60,7 @@ module.exports = {
             },
             {
                 foodName: "Khoai tây Lay's Stax 56g",
-                price: 60000,
+                price: 15000,
                 description: "Sản phẩm được làm từ khoai tây tươi",
                 image: "https://res.cloudinary.com/dquwkvuyh/image/upload/v1727719844/paldgopwexqos4ssulj5.png",
             },
