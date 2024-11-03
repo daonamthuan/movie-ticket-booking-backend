@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             releaseDate: DataTypes.BIGINT,
             movieFormat: DataTypes.STRING,
             audioType: DataTypes.STRING,
-            description: DataTypes.STRING,
+            description: DataTypes.TEXT("long"),
             image: DataTypes.STRING,
             trailer: DataTypes.STRING,
             status: DataTypes.STRING,

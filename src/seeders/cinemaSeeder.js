@@ -31,7 +31,7 @@ module.exports = {
                 totalRooms: 8,
                 address: "12 Đ. Quốc Hương, Thảo Điền, Quận 2, Hồ Chí Minh",
                 hotline: "02565678910",
-                image: "https://res.cloudinary.com/dquwkvuyh/image/upload/v1727932362/gu16qapenej5zk5sgmom.jpg",
+                image: "https://res.cloudinary.com/dquwkvuyh/image/upload/v1729881806/phcp0ch2qtqnqf2dk9kk.jpg",
             },
         ]);
     },

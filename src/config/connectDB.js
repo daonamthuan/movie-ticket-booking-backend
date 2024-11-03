@@ -1,13 +1,21 @@
 const { Sequelize } = require("sequelize");
-const env = process.env.BUILD_MODE || "development";
-const config = require(__dirname + "/../config/config.json")[env];
+require("dotenv").config();
+// const env = process.env.BUILD_MODE || "development";
+// const config = require(__dirname + "/../config/config.json")[env];
 
 // replace 'database', 'username', 'password'
-const sequelize = new Sequelize(config.database, config.username, null, {
-    host: config.host,
-    dialect: config.dialect,
-    logging: false,
-});
+const sequelize = new Sequelize(
+    process.env.DB_DATABASE_NAME,
+    process.env.DB_USERNAME,
+    process.env.DB_PASSWORD,
+    {
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        dialect: process.env.DB_DIALECT,
+        logging: false,
+        timezone: "+07:00",
+    }
+);
 
 let connectDB = async () => {
     try {

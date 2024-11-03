@@ -67,6 +67,8 @@ module.exports = {
                 role: "CUSTOMER",
                 membership: "GOLD",
                 birthday: "946684800000",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 email: "tranthibich@gmail.com",
@@ -78,6 +80,8 @@ module.exports = {
                 role: "STAFF",
                 membership: "SILVER",
                 birthday: "978307200000",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 email: "lethichung@gmail.com",
@@ -89,6 +93,8 @@ module.exports = {
                 role: "ADMIN",
                 membership: "DIAMOND",
                 birthday: "1009843200000",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 email: "phamvanddung@gmail.com",
@@ -100,6 +106,8 @@ module.exports = {
                 role: "CUSTOMER",
                 membership: "BRONZE",
                 birthday: "1041379200000",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 email: "hoangthivinh@gmail.com",
@@ -111,6 +119,8 @@ module.exports = {
                 role: "STAFF",
                 membership: "GOLD",
                 birthday: "1072915200000",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 email: "doanvanhung@gmail.com",
@@ -122,6 +132,8 @@ module.exports = {
                 role: "ADMIN",
                 membership: "SILVER",
                 birthday: "1104537600000",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 email: "buitrig@gmail.com",
@@ -133,6 +145,8 @@ module.exports = {
                 role: "CUSTOMER",
                 membership: "DIAMOND",
                 birthday: "1136073600000",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 email: "ngothihuong@gmail.com",
@@ -144,6 +158,8 @@ module.exports = {
                 role: "STAFF",
                 membership: "BRONZE",
                 birthday: "1167609600000",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 email: "dangvanhoang@gmail.com",
@@ -155,6 +171,8 @@ module.exports = {
                 role: "ADMIN",
                 membership: "GOLD",
                 birthday: "1199145600000",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
             {
                 email: "trinhthikim@gmail.com",
@@ -166,6 +184,8 @@ module.exports = {
                 role: "CUSTOMER",
                 membership: "SILVER",
                 birthday: "1230768000000",
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
         ]);
     },
